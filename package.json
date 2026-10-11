@@ -1,0 +1,19 @@
+{
+  "name": "docdrop-monorepo",
+  "version": "1.0.0",
+  "description": "DocDrop — Document Vault & Smart Print Hub",
+  "private": true,
+  "scripts": {
+    "install:all": "npm --prefix backend install && npm --prefix frontend install",
+    "init-db": "npm --prefix backend run init-db",
+    "test": "npm --prefix backend test",
+    "build": "npm --prefix frontend run build",
+    "dev:backend": "npm --prefix backend run dev",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "start:backend": "npm --prefix backend start",
+    "start": "node run_all.js"
+  },
+  "keywords": ["document", "vault", "secure-share", "xerox", "printing", "queue"],
+  "author": "DocDrop Team",
+  "license": "ISC"
+}
