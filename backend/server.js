@@ -22,7 +22,10 @@ const app = express();
 // CORS configuration
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || "http://localhost:5173",
+    origin: (process.env.CLIENT_URL || "http://localhost:5173")
+      .split(",")
+      .map((o) => o.trim())
+      .concat([`http://localhost:${process.env.PORT || 5000}`]),
     credentials: true,
   })
 );
@@ -30,8 +33,11 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Serve the DocDrop web UI (backend/public) from the same origin as the API
+app.use(express.static(path.join(__dirname, "public")));
+
 // Health and Root checks
-app.get("/", (req, res) => {
+app.get("/api", (req, res) => {
   res.json({
     name: "DocDrop API",
     version: "1.0.0",

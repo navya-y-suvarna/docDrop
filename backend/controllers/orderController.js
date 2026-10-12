@@ -1,3 +1,4 @@
+const fs = require("fs");
 const Order = require("../models/Order");
 const File = require("../models/File");
 const Notification = require("../models/Notification");
@@ -230,7 +231,27 @@ const verifyPickup = async (req, res) => {
   }
 };
 
+// Admin: stream the document attached to an order so the shop can print it
+const downloadOrderFile = async (req, res) => {
+  try {
+    const order = await Order.findById(req.params.id);
+    if (!order || !order.file_path) {
+      return res.status(404).json({ error: "Order or document not found" });
+    }
+    if (!fs.existsSync(order.file_path)) {
+      return res.status(404).json({ error: "Stored file missing on disk" });
+    }
+    res.setHeader("Content-Type", order.mime_type || "application/octet-stream");
+    res.setHeader("Content-Disposition", `attachment; filename="${encodeURIComponent(order.original_name)}"`);
+    fs.createReadStream(order.file_path).pipe(res);
+  } catch (err) {
+    console.error("Order file error:", err);
+    res.status(500).json({ error: "Failed to stream order document" });
+  }
+};
+
 module.exports = {
+  downloadOrderFile,
   createOrder,
   calculateQuote,
   listUserOrders,

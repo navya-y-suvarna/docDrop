@@ -15,6 +15,7 @@ router.get("/:id", orderController.getOrderDetails);
 // Admin endpoints
 router.get("/admin/queue", requireAdmin, orderController.listQueue);
 router.put("/admin/:id/status", requireAdmin, orderController.updateOrderStatus);
+router.get("/admin/:id/file", requireAdmin, orderController.downloadOrderFile);
 router.post("/admin/verify-pickup", requireAdmin, orderController.verifyPickup);
 
 module.exports = router;
